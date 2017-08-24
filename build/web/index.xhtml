@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Final Assignment</title>
+    </h:head>
+    <h:body>
+    </h:body>
+<p:growl id="msg"/>
+<p:accordionPanel id="master_panel">    
+      <p:tab title="Customer Registration">
+      <h:form id="form">
+        <p:panelGrid columns="3" id="topPanel">
+            <f:facet name="header" >
+                    Customer Registration Form
+            </f:facet>
+            
+            <p:outputLabel value="Enter First Name"/>
+            <p:inputText id="fname" value="#{CustomerRegistration.firstName}" size="50"/>
+            <h:panelGroup/>
+            
+            <p:outputLabel value="Enter Last Name"/>
+            <p:inputText id="lname" value="#{CustomerRegistration.lastName}" size="50"/>
+            <h:panelGroup/>
+            
+            <p:outputLabel value="Enter Address"/>
+            <p:inputText id="address" value="#{CustomerRegistration.street}" size="50"/>
+            <h:panelGroup/>
+
+            <p:outputLabel value="Enter City"/>
+            <p:inputText id="city" value="#{CustomerRegistration.city}" size="50" />
+            <h:panelGroup/>
+            
+            <p:outputLabel value="Select a State"/>
+            <p:selectOneListbox id="state" value="#{CustomerRegistration.state}" style="height:75px" label="State" scrollHeight="75">
+                <f:selectItems value="#{CustomerRegistration.states}" var="state" itemLabel="#{state.description}" itemValue="#{state.code}"/>              
+            </p:selectOneListbox>
+            <h:panelGroup/>
+
+            <p:outputLabel value="Enter Zipcode"/>
+            <p:inputText id="zipcode" value="#{CustomerRegistration.zipcode}" size="50"
+                        validatorMessage="Zip code must be numeric">
+                <f:validateLength minimum="5" maximum="5"/>
+            </p:inputText>    
+            <p:message for="zipcode"/>
+            
+            <p:outputLabel value="Enter Product"/>
+            <p:selectOneMenu id="product" value="#{CustomerRegistration.product}" style="width:150px">
+                <f:selectItem itemLabel="Select Product" itemValue="" noSelectionOption="false" />
+                <f:selectItems value="#{CustomerRegistration.products}" />
+            </p:selectOneMenu>
+            <h:panelGroup/>
+            
+            <p:outputLabel value="Enter Quantity"/>
+            <p:inputText id="quantity" value="#{CustomerRegistration.quantity}" size="1" maxlength="1"
+                         validatorMessage="Quantity must be between 1 and 5">
+                <f:validateLongRange minimum="1" maximum="5"/>
+            </p:inputText>
+            <p:message for="quantity"/>
+            
+            <p:outputLabel value="Select Payment Type"/>
+            <p:selectOneRadio id="payment" label="Payment" value="#{CustomerRegistration.paymentType}">
+                <f:selectItem itemLabel="Credit Card" itemValue="Credit Card" />
+                <f:selectItem itemLabel="Debit" itemValue="Debit" />
+                <f:selectItem itemLabel="Cash" itemValue="Cash" />
+            </p:selectOneRadio>
+            <h:panelGroup/>
+            <p:outputLabel value="Enter Account Number"/>
+            <p:inputText id="actnumber" value="#{CustomerRegistration.actNumber}" size="20">
+            </p:inputText>
+            <h:panelGroup/>
+            
+            <p:outputLabel value="Total Cost"/>
+                <p:inputText id="tcost" value="#{CustomerRegistration.totalCost}" size="10" readonly="true">
+                </p:inputText>
+            <h:panelGroup/>
+
+        </p:panelGrid>
+        <p:panelGrid columns="3" id="button_panel">
+            <p:commandButton id="submit" value="Submit" actionListener="#{CustomerRegistration.registerCustomer}" ajax="false"/>
+            <p:commandButton id="cancel" value="Cancel" actionListener="#{CustomerRegistration.resetForm}" ajax="false"/>
+        </p:panelGrid>
+     
+        <p:dataTable id="dataTable" editable="false" var="customer" paginator="true" rows="5" selectionMode="single"
+                         value="#{CustomerRegistration.dataModel}" rowKey="#{customer.id}">
+            
+        <f:facet name="header">  
+            List of Customers  
+        </f:facet>  
+                <p:ajax event="rowSelect" update=":master_panel:form, :msg" listener="#{CustomerRegistration.selectCustomer}"/>
+                <p:ajax event="rowUnselect" update=":master_panel:form,:msg" listener="#{CustomerRegistration.unselectCustomer}"/>
+            <p:column sortBy="#{customer.id}" headerText ="ID">
+            <h:outputText value="#{customer.id}" />
+            </p:column>
+
+            <p:column sortBy="#{customer.address.firstName}" headerText="FirstName">  
+            <h:outputText value="#{customer.address.firstName}" />  
+            </p:column>  
+  
+            <p:column sortBy="#{customer.address.lastName}" headerText="LastName">  
+            <h:outputText value="#{customer.address.lastName}" />  
+            </p:column>  
+  
+            <p:column sortBy="#{customer.address.street}" headerText="Address" >  
+            <h:outputText value="#{customer.address.street}" />  
+            </p:column>  
+  
+            <p:column sortBy="#{customer.order.product}" headerText="Item">  
+                <h:outputText value="#{customer.order.product}" />  
+            </p:column>  
+
+           <p:column sortBy="#{customer.order.quantity}" headerText="Quantity">  
+            <h:outputText value="#{customer.order.quantity}" />  
+           </p:column>   
+           </p:dataTable>
+    </h:form>
+    </p:tab>
+    
+
+</p:accordionPanel>
+</html>
